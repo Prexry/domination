@@ -1,11 +1,18 @@
 const express = require('express');
-const fileUpload = require('express-fileupload');
 const path = require('path');
+const fileUpload = require('express-fileupload');
+const crypto = require('crypto');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(fileUpload());
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+function generateRandomText(length) {
+  return crypto.randomBytes(length).toString('hex');
+}
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
@@ -17,24 +24,27 @@ app.post('/upload', (req, res) => {
   }
 
   const uploadedFile = req.files.file;
-  const allowedExtensions = ['mp3', 'mp4', 'gif', 'png', 'jpg'];
 
-  if (!allowedExtensions.includes(uploadedFile.name.split('.').pop())) {
-    return res.status(400).send('Invalid file type.');
+  if (uploadedFile) {
+    const originalFileName = uploadedFile.name;
+    const randomText = generateRandomText(8); // Adjust the length as needed
+    const newFileName = `${randomText}_${originalFileName}`;
+
+    // Save the uploaded file with the new filename to the "public/uploads" directory
+    uploadedFile.mv(path.join(__dirname, 'public', 'uploads', newFileName), (err) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+
+      // Generate a link to the uploaded file
+      const fileLink = `/uploads/${newFileName}`;
+
+      // Provide the link as a response
+      res.send(`File uploaded successfully. You can access it <a href="${fileLink}">here</a>`);
+    });
+  } else {
+    res.status(400).send('Invalid file.');
   }
-
-  if (uploadedFile.size > 50 * 1024 * 1024) {
-    return res.status(400).send('File size exceeds the limit (50MB).');
-  }
-
-  const fileName = `${Date.now()}_${uploadedFile.name}`;
-  uploadedFile.mv(path.join(__dirname, 'uploads', fileName), (err) => {
-    if (err) {
-      return res.status(500).send(err);
-    }
-
-    res.send(`File uploaded successfully. You can access it <a href="/uploads/${fileName}">here</a>`);
-  });
 });
 
 app.listen(port, () => {
