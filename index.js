@@ -14,6 +14,13 @@ function generateRandomText(length) {
   return crypto.randomBytes(length).toString('hex');
 }
 
+const allowedExtensions = ['mp3', 'mp4', 'txt', 'png', 'jpg', 'webm', 'webp', 'ico'];
+
+function isAllowedExtension(fileName) {
+  const extension = fileName.split('.').pop().toLowerCase();
+  return allowedExtensions.includes(extension);
+}
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -27,6 +34,16 @@ app.post('/upload', (req, res) => {
 
   if (uploadedFile) {
     const originalFileName = uploadedFile.name;
+    const extension = originalFileName.split('.').pop().toLowerCase();
+
+    if (!isAllowedExtension(originalFileName)) {
+      return res.status(400).send('Invalid file type. Allowed file types: mp3, mp4, txt, png, jpg, webm, webp, ico');
+    }
+
+    if (uploadedFile.data.length > 50 * 1024 * 1024) {
+      return res.status(400).send('File size exceeds the limit (50MB).');
+    }
+
     const randomText = generateRandomText(8); // Adjust the length as needed
     const newFileName = `${randomText}_${originalFileName}`;
 
