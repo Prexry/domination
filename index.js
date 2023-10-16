@@ -28,7 +28,7 @@ app.post('/upload', (req, res) => {
   }
 
   const fileName = `${Date.now()}_${uploadedFile.name}`;
-  uploadedFile.mv(path.join(__dirname, 'uploaded_files', fileName), (err) => {
+  uploadedFile.mv(path.join(__dirname, 'uploads', fileName), (err) => {
     if (err) {
       return res.status(500).send(err);
     }
