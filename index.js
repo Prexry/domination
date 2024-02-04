@@ -14,7 +14,7 @@ function generateRandomText(length) {
   return crypto.randomBytes(length).toString('hex');
 }
 
-const allowedExtensions = ['mp3', 'mp4', 'txt', 'png', 'jpg', 'webm', 'webp', 'ico'];
+const allowedExtensions = ['mp3', 'mp4', 'txt', 'png', 'jpg', 'webm', 'webp', 'ico', 'gif'];
 
 function isAllowedExtension(fileName) {
   const extension = fileName.split('.').pop().toLowerCase();
@@ -37,7 +37,7 @@ app.post('/upload', (req, res) => {
     const extension = originalFileName.split('.').pop().toLowerCase();
 
     if (!isAllowedExtension(originalFileName)) {
-      return res.status(400).send('Invalid file type. Allowed file types: mp3, mp4, txt, png, jpg, webm, webp, ico');
+      return res.status(400).send('Invalid file type. Allowed file types: mp3, mp4, txt, png, jpg, webm, webp, ico, gif');
     }
 
     if (uploadedFile.data.length > 50 * 1024 * 1024) {
