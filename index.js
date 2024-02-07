@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const fileUpload = require('express-fileupload');
 const crypto = require('crypto');
+const userAgent = require('useragent'); // Importing useragent package
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,7 +15,7 @@ function generateRandomText(length) {
   return crypto.randomBytes(length).toString('hex');
 }
 
-const allowedExtensions = ['mp3', 'mp4', 'txt', 'png', 'jpg', 'webm', 'webp', 'ico', 'gif'];
+const allowedExtensions = ['mp3', 'mp4', 'txt', 'png', 'jpg', 'webm', 'webp', 'ico', 'gif', 'svg', 'jpeg', 'json', 'lua', 'py', 'js', 'sh', 'dll', 'mov', 'mkv', 'pdf', 'jfif', 'ogg', 'flax', 'jar', 'conf', 'ps1', 'bat' ];
 
 function isAllowedExtension(fileName) {
   const extension = fileName.split('.').pop().toLowerCase();
@@ -27,7 +28,7 @@ app.get('/', (req, res) => {
 
 app.post('/upload', (req, res) => {
   if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send('No files were uploaded.');
+    return res.status(400).send('<div style="background-color: #ff9800; padding: 10px; border-radius: 5px;"><strong>⚠️ No files were uploaded.</strong></div>');
   }
 
   const uploadedFile = req.files.file;
@@ -37,11 +38,11 @@ app.post('/upload', (req, res) => {
     const extension = originalFileName.split('.').pop().toLowerCase();
 
     if (!isAllowedExtension(originalFileName)) {
-      return res.status(400).send('Invalid file type. Allowed file types: mp3, mp4, txt, png, jpg, webm, webp, ico, gif');
+      return res.status(400).send('<div style="background-color: #ff9800; padding: 10px; border-radius: 5px;"><strong>⚠️ Invalid file type:</strong> Allowed file types: mp3, mp4, txt, png, jpg, webm, webp, ico, gif</div>');
     }
 
     if (uploadedFile.data.length > 50 * 1024 * 1024) {
-      return res.status(400).send('File size exceeds the limit (50MB).');
+      return res.status(400).send('<div style="background-color: #ff9800; padding: 10px; border-radius: 5px;"><strong>⚠️ File size exceeds the limit (50MB).</strong></div>');
     }
 
     const randomText = generateRandomText(8); // Adjust the length as needed
@@ -56,11 +57,11 @@ app.post('/upload', (req, res) => {
       // Generate a link to the uploaded file
       const fileLink = `/uploads/${newFileName}`;
 
-      // Provide the link as a response
-      res.send(`File uploaded successfully. You can access it <a href="${fileLink}">here</a>`);
+      // Redirect the browser to the file's URL
+      res.redirect(fileLink);
     });
   } else {
-    res.status(400).send('Invalid file.');
+    res.status(400).send('<div style="background-color: #ff9800; padding: 10px; border-radius: 5px;"><strong>⚠️ Invalid file.</strong></div>');
   }
 });
 

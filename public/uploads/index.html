@@ -1,13 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Upload</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #121212; /* Dark background color */
+            color: #fff; /* Text color */
+            font-family: Arial, sans-serif;
+        }
+        .upload-container {
+            background-color: #000; /* Black box */
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        h1 {
+            margin-top: 0;
+        }
+        .custom-file-input {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #007bff; /* Blue button */
+            color: #fff; /* Text color */
+            border: none;
+            outline: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .custom-file-input:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        #file-input {
+            display: none; /* Hide the default file input */
+        }
+        #progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #007bff; /* Blue bar */
+            margin-top: 10px;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload a File</h1>
-    <form method="POST" action="/upload" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <input type="submit" value="Upload">
-    </form>
+    <div class="upload-container">
+        <h1>File Upload</h1>
+        <label for="file-input" class="custom-file-input">Choose File</label>
+        <form id="upload-form" method="POST" action="/upload" enctype="multipart/form-data">
+            <input type="file" name="file" id="file-input" accept=".mp3, .mp4, .txt, .png, .jpg, .webm, .webp, .ico, .gif">
+            <input type="submit" value="Upload" id="upload-button" style="display: none;"> <!-- Hidden submit button -->
+        </form>
+        <div id="progress-bar"></div>
+    </div>
+
+    <script src="index.js"></script>
 </body>
 </html>

@@ -3,7 +3,8 @@
     "build": "^0.1.4",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.1",
-    "run": "^1.5.0"
+    "run": "^1.5.0",
+    "useragent": "^2.3.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
