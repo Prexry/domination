@@ -41,9 +41,9 @@ app.post('/upload', (req, res) => {
       return res.status(400).send('<div style="background-color: #ff9800; padding: 10px; border-radius: 5px;"><strong>⚠️ Invalid file type:</strong> Allowed file types: mp3, mp4, txt, png, jpg, webm, webp, ico, gif</div>');
     }
 
-    if (uploadedFile.data.length > 50 * 1024 * 1024) {
-      return res.status(400).send('<div style="background-color: #ff9800; padding: 10px; border-radius: 5px;"><strong>⚠️ File size exceeds the limit (50MB).</strong></div>');
-    }
+if (uploadedFile.data.length > 100 * 1024 * 1024) {
+      return res.status(400).send('<div style="background-color: #ff9800; padding: 10px; border-radius: 5px;"><strong>⚠️ File size exceeds the limit (100MB).</strong></div>');
+}
 
     const randomText = generateRandomText(8); // Adjust the length as needed
     const newFileName = `${randomText}_${originalFileName}`;
